@@ -1,4 +1,4 @@
-package jr.task3409;
+package JavaRush.tasks.Quest4.task3409;
 
 import java.io.FileInputStream;
 import java.io.IOException;

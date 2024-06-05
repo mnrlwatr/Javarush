@@ -1,4 +1,4 @@
-package jr.task3408;
+package JavaRush.tasks.Quest4.task3408;
 
 /* 
 Кэширование

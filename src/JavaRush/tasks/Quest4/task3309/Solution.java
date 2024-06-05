@@ -1,4 +1,4 @@
-package jr.task3309;
+package JavaRush.tasks.Quest4.task3309;
 
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;

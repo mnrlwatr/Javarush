@@ -1,4 +1,4 @@
-package jr.testing.CustomDateJsonSerializer;
+package JavaRush.tasks.others.CustomDateJsonSerializer;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;

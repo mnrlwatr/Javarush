@@ -1,5 +1,5 @@
 
-package JavaRush.MiniProjects.chatting.Util;
+package JavaRush.MiniProjects.PlaySitcomScene.Util;
 
 
 

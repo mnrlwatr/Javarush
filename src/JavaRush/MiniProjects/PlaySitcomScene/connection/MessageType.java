@@ -1,4 +1,4 @@
-package JavaRush.MiniProjects.chatting.connection;
+package JavaRush.MiniProjects.PlaySitcomScene.connection;
 
 
 public enum MessageType {

@@ -1,4 +1,4 @@
-package jr.testing.CustomDateJsonSerializer;
+package JavaRush.tasks.others.CustomDateJsonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,9 +1,9 @@
-package JavaRush.MiniProjects.chatting;
+package JavaRush.MiniProjects.PlaySitcomScene;
 
-import JavaRush.MiniProjects.chatting.Util.ConsoleHelper;
-import JavaRush.MiniProjects.chatting.connection.Connection;
-import JavaRush.MiniProjects.chatting.connection.Message;
-import JavaRush.MiniProjects.chatting.connection.MessageType;
+import JavaRush.MiniProjects.PlaySitcomScene.Util.ConsoleHelper;
+import JavaRush.MiniProjects.PlaySitcomScene.connection.Connection;
+import JavaRush.MiniProjects.PlaySitcomScene.connection.Message;
+import JavaRush.MiniProjects.PlaySitcomScene.connection.MessageType;
 
 import java.io.IOException;
 import java.net.ServerSocket;

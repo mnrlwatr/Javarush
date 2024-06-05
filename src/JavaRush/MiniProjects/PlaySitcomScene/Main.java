@@ -1,4 +1,4 @@
-package JavaRush.MiniProjects.chatting;
+package JavaRush.MiniProjects.PlaySitcomScene;
 
 import java.util.ArrayList;
 import java.util.Collections;

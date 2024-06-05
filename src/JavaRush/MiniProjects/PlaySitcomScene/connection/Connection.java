@@ -1,11 +1,12 @@
-package JavaRush.tasks.Quest3.task30.task3008;
+package JavaRush.MiniProjects.PlaySitcomScene.connection;
 
-import java.io.*;
-import java.net.*;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
-/**
- * .
- */
+
 public class Connection implements Closeable{
     private final Socket socket;
     private final ObjectOutputStream out;
@@ -13,7 +14,7 @@ public class Connection implements Closeable{
 
     public Connection(Socket socket) throws IOException {
         this.socket = socket;
-        // Создать объект класса ObjectOutputStream нужно до того, как будет создаваться объект
+        // Создания объекта класса ObjectOutputStream до того, как будет создаваться объект
         // класса ObjectInputStream, иначе может возникнуть взаимная блокировка потоков,
         // которые хотят установить соединение
         this.out = new ObjectOutputStream(socket.getOutputStream());
@@ -30,10 +31,6 @@ public class Connection implements Closeable{
         synchronized (in){
             return (Message)in.readObject();
         }
-    }
-
-    public SocketAddress getRemoteSocketAddress(){
-        return socket.getRemoteSocketAddress();
     }
 
     public void close() throws IOException {

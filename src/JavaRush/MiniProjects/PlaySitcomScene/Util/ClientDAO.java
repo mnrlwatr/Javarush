@@ -1,4 +1,4 @@
-package JavaRush.MiniProjects.chatting.Util;
+package JavaRush.MiniProjects.PlaySitcomScene.Util;
 
 import java.util.HashSet;
 import java.util.Set;
