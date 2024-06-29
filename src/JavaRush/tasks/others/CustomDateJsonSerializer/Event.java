@@ -1,4 +1,4 @@
-package org.example.JavaRush.tasks.others.CustomDateJsonSerializer;
+package JavaRush.tasks.others.CustomDateJsonSerializer;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class Event {
     public String name;
-    @JsonSerialize(using = JavaRush.tasks.others.CustomDateJsonSerializer.CustomDateSerializer.class)
+    @JsonSerialize(using = CustomDateSerializer.class)
     public Date eventDate;
 
     public Event(String name, Date eventDate) {

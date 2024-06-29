@@ -2,7 +2,7 @@ package JavaRush.MiniProjects.AmigoSet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-//import java.io.Serial;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
@@ -63,7 +63,7 @@ public class AmigoSet<E> extends AbstractSet<E> implements Set<E>, Cloneable, Se
             throw new InternalError();
         }
     }
-   // @Serial
+    @Serial
     private void writeObject(ObjectOutputStream s) throws java.io.IOException {
 
         s.defaultWriteObject();
@@ -79,7 +79,7 @@ public class AmigoSet<E> extends AbstractSet<E> implements Set<E>, Cloneable, Se
             s.writeObject(e);
     }
 
-    //@Serial
+    @Serial
     private void readObject(ObjectInputStream s) throws java.io.IOException, ClassNotFoundException {
 
         s.defaultReadObject();

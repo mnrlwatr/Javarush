@@ -2,13 +2,13 @@
 *.class
 
 # Maven
-target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
 
 # IntelliJ IDEA
+target/
 *.iml
 .idea/
 out/
@@ -38,6 +38,5 @@ out/
 hs_err_pid*
 replay_pid*
 
-/src/test/
-
-/src/main/java/JavaRush/MyTesting/
+# my files
+/src/Tests/
