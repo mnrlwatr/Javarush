@@ -1,10 +1,10 @@
-package JavaRush.MiniProjects.PlaySitcomScene;
+package JavaRush.MiniProjects.others.SomeDialog.model;
 
-import JavaRush.MiniProjects.PlaySitcomScene.Util.ClientDAO;
-import JavaRush.MiniProjects.PlaySitcomScene.Util.ConsoleHelper;
-import JavaRush.MiniProjects.PlaySitcomScene.connection.Message;
-import JavaRush.MiniProjects.PlaySitcomScene.connection.MessageType;
-import JavaRush.MiniProjects.PlaySitcomScene.connection.TheSceneConnection;
+import JavaRush.MiniProjects.others.SomeDialog.service.UserNameChecker;
+import JavaRush.MiniProjects.others.SomeDialog.service.Util.ConsoleHelper;
+import JavaRush.MiniProjects.others.SomeDialog.message.Message;
+import JavaRush.MiniProjects.others.SomeDialog.message.enums.MessageType;
+import JavaRush.MiniProjects.others.SomeDialog.connection.LocalChatConnection;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -12,30 +12,30 @@ import java.util.List;
 import java.util.concurrent.locks.LockSupport;
 
 
-public class SitcomActor implements Runnable {
+public class User implements Runnable {
 
     private final String name;
-    private TheSceneConnection connection;
-    private volatile boolean actorJoined = false;
+    private LocalChatConnection connection;
+    private volatile boolean userJoined = false;
     private final LinkedList<String> speechList;
-    private volatile boolean maySay = false;
+    private volatile boolean mayWrite = false;
 
-    public SitcomActor(String name) {
-        // ClientDAO.addNewClient() возвращает true если не существует актёра с таким именем
-        if (ClientDAO.addNewClient(name)) {
+    public User(String name) {
+        // UserNameChecker.addNewUser() возвращает true если не существует юзера с таким именем.
+        if (UserNameChecker.addNewUser(name)) {
             this.name = name;
         } else {
-            throw new RuntimeException("Актёр с именем " + name + " уже существует");
+            throw new RuntimeException("User с именем " + name + " уже существует");
         }
         speechList = new LinkedList<>();
     }
 
     @Override
     public void run() {
-        joinToTheScene();
+        joinToTheChat();
     }
 
-    public void joinToTheScene() {
+    private void joinToTheChat() {
 
         SocketThread socketThread = new SocketThread();
         socketThread.start();
@@ -47,21 +47,21 @@ public class SitcomActor implements Runnable {
         }
 
 
-        if (!actorJoined) {
+        if (!userJoined) {
             ConsoleHelper.writeMessage("failed to join");
         }
 
-        while (actorJoined && !speechList.isEmpty()) {
-            while (actorJoined&&!maySay) {
+        while (userJoined && !speechList.isEmpty()) {
+            while (userJoined &&!mayWrite) {
                 LockSupport.parkNanos(10000);
             }
             try {
                 connection.send(new Message(MessageType.TEXT, speechList.pollFirst()));
             } catch (IOException e) {
                 ConsoleHelper.writeMessage("Ошибка при отправке сообщения. Соединение будет закрыто.");
-                actorJoined = false;
+                userJoined = false;
             }
-            setMaySay(false);
+            setMayWrite(false);
         }
 
     }
@@ -70,10 +70,10 @@ public class SitcomActor implements Runnable {
         @Override
         public void run() {
             try {
-                SitcomActor.this.connection = new TheSceneConnection();
+                User.this.connection = new LocalChatConnection();
                 handShake();
             } catch (IOException | ClassNotFoundException e) {
-                ConsoleHelper.writeMessage("Произошла ошибка во время присоединение " + name);
+                ConsoleHelper.writeMessage("Произошла ошибка во время присоединения " + name);
             }
         }
 
@@ -82,10 +82,10 @@ public class SitcomActor implements Runnable {
             while (true) {
                 Message message = connection.receive();
                 if (message.getType() == MessageType.NAME_REQUEST) {
-                    String clientName = SitcomActor.this.getName();
+                    String clientName = User.this.getName();
                     connection.send(new Message(MessageType.USER_NAME, clientName));
                 } else if (message.getType() == MessageType.NAME_ACCEPTED) {
-                    actorJoined = true;
+                    userJoined = true;
                     break;
                 }
             }
@@ -94,7 +94,6 @@ public class SitcomActor implements Runnable {
 
 
     /**
-     * Речи будут сказаны в порядке их добавления
      *
      * @throws NullPointerException если speech==null
      */
@@ -103,14 +102,18 @@ public class SitcomActor implements Runnable {
         //todo case when no arguments: sitcomActorObj.addSpeech();
     }
 
+    public void clearSpeechList(){
+        speechList.clear();
+    }
+
     public void exit() {
         try {
             connection.send(new Message(MessageType.USER_REMOVED));
         } catch (IOException e) {
-            actorJoined = false;
+            userJoined = false;
             ConsoleHelper.writeMessage("Error, connection will be closed");
         }
-        actorJoined = false;
+        userJoined = false;
     }
 
     // Getters and Setters
@@ -119,13 +122,13 @@ public class SitcomActor implements Runnable {
         return name;
     }
 
-    public boolean isActorJoined() {
-        return actorJoined;
+    public boolean isUserJoined() {
+        return userJoined;
     }
 
-    //happens before: Вызов этого сеттера из класса TheScene будет после создания нового объекта SitcomActor
-    //happens before: Вызов метода объектом SitcomActor obj будет после вызова из TheScene.playTheScene
-    public void setMaySay(boolean maySay) {
-        this.maySay = maySay;
+    //happens before: один из вызовов этого сеттера из класса Server будет после создания нового объекта User
+    //happens before: один из вызовов этого сеттера объектом User obj будет после вызова этого сеттера из Server.go
+    public void setMayWrite(boolean mayWrite) {
+        this.mayWrite = mayWrite;
     }
 }

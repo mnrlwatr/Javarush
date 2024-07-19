@@ -1,4 +1,6 @@
-package JavaRush.MiniProjects.PlaySitcomScene.connection;
+package JavaRush.MiniProjects.others.SomeDialog.connection;
+
+import JavaRush.MiniProjects.others.SomeDialog.message.Message;
 
 import java.io.Closeable;
 import java.io.IOException;

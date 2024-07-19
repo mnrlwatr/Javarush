@@ -1,4 +1,6 @@
-package JavaRush.MiniProjects.PlaySitcomScene.connection;
+package JavaRush.MiniProjects.others.SomeDialog.message;
+
+import JavaRush.MiniProjects.others.SomeDialog.message.enums.MessageType;
 
 import java.io.Serializable;
 

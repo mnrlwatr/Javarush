@@ -1,9 +1,10 @@
-package JavaRush.MiniProjects.PlaySitcomScene;
+package JavaRush.MiniProjects.others.SomeDialog;
 
-import JavaRush.MiniProjects.PlaySitcomScene.Util.ConsoleHelper;
-import JavaRush.MiniProjects.PlaySitcomScene.connection.Connection;
-import JavaRush.MiniProjects.PlaySitcomScene.connection.Message;
-import JavaRush.MiniProjects.PlaySitcomScene.connection.MessageType;
+import JavaRush.MiniProjects.others.SomeDialog.service.Util.ConsoleHelper;
+import JavaRush.MiniProjects.others.SomeDialog.connection.Connection;
+import JavaRush.MiniProjects.others.SomeDialog.message.Message;
+import JavaRush.MiniProjects.others.SomeDialog.message.enums.MessageType;
+import JavaRush.MiniProjects.others.SomeDialog.model.User;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -15,15 +16,12 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 
-public class TheScene {
+public class Server {
 
     private static final Map<String, Connection> connectionMap = new ConcurrentHashMap<>();
     private static final Semaphore semaphore = new Semaphore(1);
-    private static volatile int consoleOutTime;
-
-    private TheScene() {
-        throw new RuntimeException();
-    }
+    private static int consoleOutTime;
+    private static volatile LinkedList<User> participantsQueue;
 
     private static class Handler extends Thread {
 
@@ -36,45 +34,45 @@ public class TheScene {
         @Override
         public void run() {
 
-            String actorName = null;
+            String userName = null;
             try (Connection connection = new Connection(socket)) {
-                actorName = handShake(connection);
-                informJoinedActor(actorName);
-                mainLoop(connection, actorName);
-                informLeftActor(actorName);
+                userName = handShake(connection);
+                informJoinedUser(userName);
+                mainLoop(connection, userName);
+                informLeftUser(userName);
             } catch (IOException | ClassNotFoundException e) {
                 ConsoleHelper.writeMessage("Error!");
             }
 
-            if (actorName != null) {
-                connectionMap.remove(actorName);
+            if (userName != null) {
+                connectionMap.remove(userName);
             }
 
         }
 
         /**
          * @param connection
-         * @return Имя нового актёра
+         * @return Имя нового участника
          * @throws IOException
          * @throws ClassNotFoundException
          */
         private String handShake(Connection connection) throws IOException, ClassNotFoundException {
-            String name;
-            // Если какая-то проверка не прошла, заново запросить имя клиента
+            String clientName;
+            // Если какая-то проверка не прошла, заново запросить имя пользователя
             while (true) {
                 connection.send(new Message(MessageType.NAME_REQUEST));
                 Message message = connection.receive();
                 if (message.getType() == MessageType.USER_NAME) {
-                    name = message.getData();
-                    if (!name.isEmpty() && !connectionMap.containsKey(name)) {
-                        connectionMap.put(name, connection);
+                    clientName = message.getData();
+                    if (!clientName.isEmpty() && !connectionMap.containsKey(clientName)) {
+                        connectionMap.put(clientName, connection);
                         connection.send(new Message(MessageType.NAME_ACCEPTED));
                         break;
                     }
                 }
             }
 
-            return name;
+            return clientName;
         }
 
         /**
@@ -99,42 +97,45 @@ public class TheScene {
 
         }
 
-        private void timedConsoleOut(String speech) {
-            try {
-                TimeUnit.SECONDS.sleep(consoleOutTime);
-                ConsoleHelper.writeMessage(speech);
-                semaphore.release();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new RuntimeException(e);
-            }
+        private void informJoinedUser(String userName) {
+            ConsoleHelper.writeMessage(userName + " joined");
         }
 
-
-        private void informJoinedActor(String actorName) {
-            ConsoleHelper.writeMessage(actorName + " joined");
+        private void informLeftUser(String userName) {
+            ConsoleHelper.writeMessage(userName + "  left");
         }
+    }
 
-        private void informLeftActor(String actorName) {
-            ConsoleHelper.writeMessage(actorName + "  left");
+    private static void timedConsoleOut(String speech) {
+        try {
+            TimeUnit.SECONDS.sleep(consoleOutTime);
+            ConsoleHelper.writeMessage(speech);
+            semaphore.release();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
         }
     }
 
 
     /**
-     * Актёры по очереди говорят свою речь с интервалом time
-     * Одна речь за один роль
+     * Участники по очереди будут писать своё сообщение с интервалом time
+     * Одно сообщение за один очередь в participantsQueue
      *
-     * @param roleQueue Роли будут сыграны в порядке их добавление в roleQueue
+     * @param participantsQueue Участники будут писать в порядке в котором их добавили в participantsQueue
      * @param time      Время в секундах
      */
-    public static void playTheScene(LinkedList<SitcomActor> roleQueue, int time) {
+    public static void configure (LinkedList<User> participantsQueue, int time) {
         consoleOutTime = time;
-        methodName1();
-        new Thread(() -> play(roleQueue)).start();
+        Server.participantsQueue=participantsQueue;
     }
 
-    private static void methodName1 (){
+    public static void go (){
+        runServer();
+        new Thread(() -> play(participantsQueue)).start();
+    }
+
+    private static void runServer(){
         try (ServerSocket serverSocket = new ServerSocket(4004)) {
             while (true) {
                 serverSocket.setSoTimeout(3000);
@@ -145,18 +146,18 @@ public class TheScene {
         }
     }
 
-    private static void play(LinkedList<SitcomActor> roleQueue) {
-        for (SitcomActor actor : roleQueue) {
-            // если какой-то актёр выйдет до прихода его очереди, то программа зависнет в semaphore.acquire
-            // проверяем не вышел ли актёр до semaphore.acquire
-            if(actor.isActorJoined()){
+    private static void play(LinkedList<User> participantsQueue) {
+        for (User user : participantsQueue) {
+            // если какой-то участник выйдет до прихода его очереди, то программа зависнет в semaphore.acquire
+            // проверяем не вышел ли участник до semaphore.acquire
+            if(user.isUserJoined()){
                 try {
                     semaphore.acquire();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     throw new RuntimeException(e);
                 }
-                actor.setMaySay(true);
+                user.setMayWrite(true);
             }
 
         }

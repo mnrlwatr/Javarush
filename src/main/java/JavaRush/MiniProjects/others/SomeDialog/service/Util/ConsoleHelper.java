@@ -1,9 +1,9 @@
 
-package JavaRush.MiniProjects.PlaySitcomScene.Util;
+package JavaRush.MiniProjects.others.SomeDialog.service.Util;
 
 
 
-public class ConsoleHelper {
+public final class ConsoleHelper {
 
     private ConsoleHelper() {
         throw new RuntimeException("Это утилитарный класс");
