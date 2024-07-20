@@ -123,19 +123,19 @@ public class Server {
      * Одно сообщение за один очередь в participantsQueue
      *
      * @param participantsQueue Участники будут писать в порядке в котором их добавили в participantsQueue
-     * @param time      Время в секундах
+     * @param time              Время в секундах
      */
-    public static void configure (LinkedList<User> participantsQueue, int time) {
+    public static void configure(LinkedList<User> participantsQueue, int time) {
         consoleOutTime = time;
-        Server.participantsQueue=participantsQueue;
+        Server.participantsQueue = participantsQueue;
     }
 
-    public static void go (){
-        runServer();
+    public static void play() {
         new Thread(() -> play(participantsQueue)).start();
     }
 
-    private static void runServer(){
+
+    public static void runServer() {
         try (ServerSocket serverSocket = new ServerSocket(4004)) {
             while (true) {
                 serverSocket.setSoTimeout(3000);
@@ -150,14 +150,14 @@ public class Server {
         for (User user : participantsQueue) {
             // если какой-то участник выйдет до прихода его очереди, то программа зависнет в semaphore.acquire
             // проверяем не вышел ли участник до semaphore.acquire
-            if(user.isUserJoined()){
+            if (user.getLocalChatJoiner().isUserJoined()) {
                 try {
                     semaphore.acquire();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     throw new RuntimeException(e);
                 }
-                user.setMayWrite(true);
+                user.getLocalChatJoiner().setMayWrite(true);
             }
 
         }

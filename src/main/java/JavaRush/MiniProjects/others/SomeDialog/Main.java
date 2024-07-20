@@ -1,7 +1,6 @@
 package JavaRush.MiniProjects.others.SomeDialog;
 
 import JavaRush.MiniProjects.others.SomeDialog.model.User;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -11,9 +10,8 @@ import java.util.concurrent.TimeUnit;
 public class Main {
     public static void main(String[] args) {
 
-        //todo надо сделать отдельный сервисный класс
-        // который будет добавлять,менять и отдавать тексты из файла
-        // у каждого участника будет свой отдельный файл.
+        //todo надо сделать отдельный класс
+        // который будет добавлять,менять и отдавать тексты из файлов (у каждого участника будет свой отдельный файл текстов).
 
         User Chandler = new User("Chandler");
         Chandler.addSpeech("Hey.",
@@ -39,11 +37,11 @@ public class Main {
 
         User Rachel = new User("Rachel");
 
-        List<User> users = new ArrayList<>();
-        Collections.addAll(users, Chandler, Joey, Monica, Phoebe, Ross, Rachel);
+        List<User> participants = new ArrayList<>();
+        Collections.addAll(participants, Chandler, Joey, Monica, Phoebe, Ross, Rachel);
 
-        for (User user : users) {
-            new Thread(user).start();
+        for (User user : participants) {
+            user.joinToLocalChat();
         }
 
 
@@ -64,7 +62,9 @@ public class Main {
         participantsQueue.add(Joey);
 
         Server.configure(participantsQueue, 2);
-        Server.go();
+        Server.runServer();
+
+        Server.play();
 
 
         // если убрать sleep(35) то users.forEach(User::exit) сразу прервёт диалог
@@ -74,7 +74,8 @@ public class Main {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        users.forEach(User::exit);
+        
+        participants.forEach(User::exit);
 
     }
 }
