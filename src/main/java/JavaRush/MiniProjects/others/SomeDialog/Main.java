@@ -1,7 +1,6 @@
 package JavaRush.MiniProjects.others.SomeDialog;
 
 import JavaRush.MiniProjects.others.SomeDialog.model.User;
-import JavaRush.MiniProjects.others.SomeDialog.service.server.Server;
 
 import java.util.ArrayList;
 import java.util.Collections;

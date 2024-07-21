@@ -1,16 +1,19 @@
 package JavaRush.MiniProjects.others.SomeDialog.model;
 
 import JavaRush.MiniProjects.others.SomeDialog.LocalChatJoinable;
+import JavaRush.MiniProjects.others.SomeDialog.service.AbstractChatJoiner;
 import JavaRush.MiniProjects.others.SomeDialog.service.LocalChatJoiner;
 import JavaRush.MiniProjects.others.SomeDialog.service.UserNameChecker;
+import lombok.Getter;
+
 import java.util.LinkedList;
 import java.util.List;
 
+@Getter
 public class User implements LocalChatJoinable {
-
     private final String name;
     private final LinkedList<String> speechList;
-    private LocalChatJoiner localChatJoiner;
+    private AbstractChatJoiner chatJoiner;
 
     public User(String name) {
         // UserNameChecker.addNewUser() возвращает true если не существует юзера с таким именем.
@@ -24,7 +27,7 @@ public class User implements LocalChatJoinable {
 
     @Override
     public void joinToLocalChat() {
-        localChatJoiner = new LocalChatJoiner(this);
+        chatJoiner = new LocalChatJoiner(this);
     }
 
 
@@ -42,22 +45,7 @@ public class User implements LocalChatJoinable {
 
     @Override
     public void exitFromLocalChat() {
-        localChatJoiner.exit();
+        chatJoiner.exit();
     }
-
-    // Getters and Setters
-
-    public LocalChatJoiner getLocalChatJoiner() {
-        return localChatJoiner;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public LinkedList<String> getSpeechList() {
-        return speechList;
-    }
-
 
 }

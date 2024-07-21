@@ -1,26 +1,19 @@
 package JavaRush.MiniProjects.others.SomeDialog.service;
 
 import JavaRush.MiniProjects.others.SomeDialog.connection.Connection;
+import lombok.Getter;
+import lombok.Setter;
 
-abstract class AbstractChatJoiner {
+@Getter
+@Setter
+public abstract class AbstractChatJoiner {
+
     private volatile boolean userJoined;
-    private Connection connection;
-    abstract void join();
-    abstract void exit();
+    private volatile boolean permissionToSend = false;
+    private volatile Connection connection;
 
-    public boolean isUserJoined() {
-      return userJoined;
-   }
+    public abstract void join();
 
-    void setUserJoined(boolean userJoined) {
-      this.userJoined = userJoined;
-   }
+    public abstract void exit();
 
-    Connection getConnection() {
-      return connection;
-   }
-
-    void setConnection(Connection connection) {
-      this.connection = connection;
-   }
 }

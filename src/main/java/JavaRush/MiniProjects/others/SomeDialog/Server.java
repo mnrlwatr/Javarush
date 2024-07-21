@@ -1,4 +1,4 @@
-package JavaRush.MiniProjects.others.SomeDialog.service.server;
+package JavaRush.MiniProjects.others.SomeDialog;
 
 import JavaRush.MiniProjects.others.SomeDialog.service.Util.ConsoleHelper;
 import JavaRush.MiniProjects.others.SomeDialog.connection.Connection;
@@ -151,14 +151,17 @@ public class Server {
         for (User user : participantsQueue) {
             // если какой-то участник выйдет до прихода его очереди, то программа зависнет в semaphore.acquire
             // проверяем не вышел ли участник до semaphore.acquire
-            if (user.getLocalChatJoiner().isUserJoined()) {
+            if (user.getChatJoiner().isUserJoined()) {
                 try {
                     semaphore.acquire();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     throw new RuntimeException(e);
                 }
-                user.getLocalChatJoiner().setPermissionToSend(true);
+
+                //happens before: один из вызовов этого сеттера будет после создания нового объекта User
+                //happens before: один из вызовов этого сеттера объектом User obj будет после вызова этого сеттера из Server.play
+                user.getChatJoiner().setPermissionToSend(true);
             }
 
         }

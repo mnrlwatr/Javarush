@@ -14,7 +14,6 @@ import java.util.concurrent.locks.LockSupport;
 public class LocalChatJoiner extends AbstractChatJoiner implements Runnable {
 
     private final User currentUser;
-    private volatile boolean permissionToSend = false;
 
     public LocalChatJoiner(User currentUser) {
         this.currentUser = currentUser;
@@ -44,7 +43,7 @@ public class LocalChatJoiner extends AbstractChatJoiner implements Runnable {
         }
 
         while (isUserJoined() && !currentUser.getSpeechList().isEmpty()) {
-            while (isUserJoined() && !permissionToSend) {
+            while (isUserJoined() && !isPermissionToSend()) {
                 LockSupport.parkNanos(10000);
             }
             try {
@@ -53,6 +52,8 @@ public class LocalChatJoiner extends AbstractChatJoiner implements Runnable {
                 ConsoleHelper.writeMessage("Ошибка при отправке сообщения. Соединение будет закрыто.");
                 setUserJoined(false);
             }
+            //happens before: один из вызовов этого сеттера будет после создания нового объекта User
+            //happens before: один из вызовов этого сеттера объектом User obj будет после вызова этого сеттера из Server.play
             setPermissionToSend(false);
         }
 
@@ -93,13 +94,5 @@ public class LocalChatJoiner extends AbstractChatJoiner implements Runnable {
             ConsoleHelper.writeMessage("Error, connection will be closed");
         }
         setUserJoined(false);
-    }
-
-    // Getters and Setters
-
-    //happens before: один из вызовов этого сеттера из класса Server будет после создания нового объекта User
-    //happens before: один из вызовов этого сеттера объектом User obj будет после вызова этого сеттера из Server.go
-    public void setPermissionToSend(boolean permissionToSend) {
-        this.permissionToSend = permissionToSend;
     }
 }
