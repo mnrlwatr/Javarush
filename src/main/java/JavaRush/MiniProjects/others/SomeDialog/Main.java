@@ -1,6 +1,8 @@
 package JavaRush.MiniProjects.others.SomeDialog;
 
 import JavaRush.MiniProjects.others.SomeDialog.model.User;
+import JavaRush.MiniProjects.others.SomeDialog.service.server.Server;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -70,7 +72,7 @@ public class Main {
         // если убрать sleep(35) то users.forEach(User::exit) сразу прервёт диалог
         // можете поставить sleep(20) и посмотреть на результат (диалог прервётся, участники не успеют сказать всю речь)
         try {
-            TimeUnit.SECONDS.sleep(35);
+            TimeUnit.SECONDS.sleep(34);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

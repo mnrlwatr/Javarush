@@ -1,4 +1,4 @@
-package JavaRush.MiniProjects.others.SomeDialog;
+package JavaRush.MiniProjects.others.SomeDialog.service.server;
 
 import JavaRush.MiniProjects.others.SomeDialog.service.Util.ConsoleHelper;
 import JavaRush.MiniProjects.others.SomeDialog.connection.Connection;
@@ -131,6 +131,7 @@ public class Server {
     }
 
     public static void play() {
+        // отдельным тредом сделано для того чтоб можно было в любой момент прервать диалог из main();
         new Thread(() -> play(participantsQueue)).start();
     }
 
@@ -157,7 +158,7 @@ public class Server {
                     Thread.currentThread().interrupt();
                     throw new RuntimeException(e);
                 }
-                user.getLocalChatJoiner().setMayWrite(true);
+                user.getLocalChatJoiner().setPermissionToSend(true);
             }
 
         }
