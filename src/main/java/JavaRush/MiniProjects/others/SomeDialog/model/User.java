@@ -1,11 +1,12 @@
 package JavaRush.MiniProjects.others.SomeDialog.model;
 
+import JavaRush.MiniProjects.others.SomeDialog.LocalChatJoinable;
 import JavaRush.MiniProjects.others.SomeDialog.service.LocalChatJoiner;
 import JavaRush.MiniProjects.others.SomeDialog.service.UserNameChecker;
 import java.util.LinkedList;
 import java.util.List;
 
-public class User {
+public class User implements LocalChatJoinable {
 
     private final String name;
     private final LinkedList<String> speechList;
@@ -21,6 +22,7 @@ public class User {
         speechList = new LinkedList<>();
     }
 
+    @Override
     public void joinToLocalChat() {
         localChatJoiner = new LocalChatJoiner(this);
     }
@@ -38,7 +40,8 @@ public class User {
         speechList.clear();
     }
 
-    public void exit() {
+    @Override
+    public void exitFromLocalChat() {
         localChatJoiner.exit();
     }
 

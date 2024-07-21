@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit;
 public class Main {
     public static void main(String[] args) {
 
-        //todo надо сделать отдельный класс
-        // который будет добавлять,менять и отдавать тексты из файлов (у каждого участника будет свой отдельный файл текстов).
+        //todo сделать отдельный класс который будет добавлять,изменять и отдавать тексты из файлов
+        // у каждого участника будет свой отдельный файл текстов.
 
         User Chandler = new User("Chandler");
         Chandler.addSpeech("Hey.",
@@ -37,11 +37,11 @@ public class Main {
 
         User Rachel = new User("Rachel");
 
-        List<User> participants = new ArrayList<>();
+        List<LocalChatJoinable> participants = new ArrayList<>();
         Collections.addAll(participants, Chandler, Joey, Monica, Phoebe, Ross, Rachel);
 
-        for (User user : participants) {
-            user.joinToLocalChat();
+        for (LocalChatJoinable participant : participants) {
+            participant.joinToLocalChat();
         }
 
 
@@ -75,7 +75,7 @@ public class Main {
             throw new RuntimeException(e);
         }
         
-        participants.forEach(User::exit);
+        participants.forEach(LocalChatJoinable::exitFromLocalChat);
 
     }
 }

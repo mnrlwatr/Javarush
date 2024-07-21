@@ -11,7 +11,7 @@ import java.net.Socket;
 import java.util.concurrent.locks.LockSupport;
 
 
-public class LocalChatJoiner implements Runnable {
+public class LocalChatJoiner extends AbstractChatJoiner implements Runnable {
 
     private final User currentUser;
     private Connection connection;
@@ -28,6 +28,7 @@ public class LocalChatJoiner implements Runnable {
         join();
     }
 
+    @Override
     public void join() {
 
         SocketThread socketThread = new SocketThread();
@@ -85,6 +86,7 @@ public class LocalChatJoiner implements Runnable {
         }
     }
 
+    @Override
     public void exit() {
         try {
             connection.send(new Message(MessageType.USER_REMOVED));
